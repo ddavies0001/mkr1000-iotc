@@ -29,9 +29,9 @@ git clone https://github.com/ddavies0001/mkr1000-iotc.git
 ## Prerequisite
 
 
-Install the Arduino IDE (I tested with the current latest version 1.8.8) and the necessary drivers for the Arduino MKR1000 series of boards and ensure that a simple LED blink sketch compiles and runs on the board.  Follow the guide here https://www.arduino.cc/en/Guide/MKR1000
+Install the Arduino IDE (I tested with the current latest version 1.8.9) and the necessary drivers for the Arduino MKR1000 series of boards and ensure that a simple LED blink sketch compiles and runs on the board.  Follow the guide here https://www.arduino.cc/en/Guide/MKR1000
 
-This code requires a couple of libraries to be installed for it to compile.  Depending on if you are using a MKR1000 or MKR1010 board the Wi-Fi libraries are different.  To install an Arduino library open the Arduino IDE and click the "Sketch" menu and then "Include Library" -> "Manage Libraries".  In the dialog filter by the library name below and install the latest version.  For more information on installing libraries with Arduino see https://www.arduino.cc/en/guide/libraries. 
+This code requires a couple of libraries to be installed for it to compile.  Depending on if you are using a MKR1000 or MKR1010 board the Wi-Fi libraries are different.  To install an Arduino library, open the Arduino IDE and click the "Sketch" menu and then "Include Library" -> "Manage Libraries".  In the dialog, filter by the library name below and install the latest version.  For more information on installing libraries with Arduino see https://www.arduino.cc/en/guide/libraries. 
 
 ### MKR1000:
 
@@ -59,7 +59,7 @@ to:
 #define MQTT_MAX_PACKET_SIZE 2048
 ```
 
-Save the file and you have made the necessary fix.  The size probably does not need to be this large but I have not found the crossover point where the size causes a failure.  Fortunately the MKR1000/1010 has a pretty good amount of SRAM (32KB) so we should be ok.
+Save the file and you have made the necessary fix.  The size probably does not need to be this large but firedog1024 did not find the crossover point where the size causes a failure.  Fortunately the MKR1000/1010 has a pretty good amount of SRAM (32KB!) so we should be ok.
 
 To connect the device to Azure IoT Central you will need to provision an IoT Central application.  This is free for **seven days** but if you already have signed up for an Azure subscription and want to use pay as you go IoT Central is free as long as you have no more than **five devices** and do not exceed **1MB per month** of data.  
 
