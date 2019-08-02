@@ -73,7 +73,7 @@ Go to https://apps.azureiotcentral.com/ to create an application (you will need 
 * If you select Pay-As-You-Go you will need to select your Azure subscription and select a region to install the application into.  This information is not needed for Trial.
 * Click "Create"
 
-You should now have an IoT Central application provisioned so lets add a real device.  Click Device Explorer on the left.  You will now see three templates in the left hand panel (MXChip, Raspberry Pi, Windows 10 IoT Core).  We are going to use the MXChip template for this exercise to prevent having to create a new template.  Click "MXChip" and click the "+V" icon on the toolbar, this will present a drop down where we click "Real" to add a new physical device.  Give a name to your device and click "Create".  
+You should now have an IoT Central application provisioned so lets add a real device.  Click Devices on the left.  You will now see three templates in the left hand panel (MXChip, Raspberry Pi, Windows 10 IoT Core).  We are going to use the MXChip template for this exercise to avoid having to create a new template.  Click "MXChip" and click the "+V" icon on the toolbar, this will present a drop down where we click "Real" to add a new physical device.  Give a name to your device and click "Create".  
 
 You now have a device in IoT Central that can be connected to from the Arduino MKR1000/1010 device.  Proceed to wiring and configuration.
 
