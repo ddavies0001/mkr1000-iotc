@@ -49,7 +49,7 @@ This code requires a couple of libraries to be installed for it to compile.  Dep
 * Install library "RTCZero"
 * Install library "PubSubClient"
 
-**Note** - We need to increase the payload size limit in PubSubClient to allow for the larger size of MQTT messages from the Azure IoT Hub.  Open the file at %HomePath%\Documents\Arduino\libraries\PubSubClient\src\PubSubClient.h in your favorite code editor.  Change the line (line 26 in current version):
+**Note** - We need to increase the payload size limit in PubSubClient to allow for the larger size of MQTT messages from the Azure IoT Hub.  Open the file at %HomePath%\Documents\Arduino\<library selector directory>\libraries\PubSubClient\src\PubSubClient.h in your favorite code editor.  Change the line (line 26 in current version):
 
 ``` C
 #define MQTT_MAX_PACKET_SIZE 128
