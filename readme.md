@@ -13,7 +13,7 @@ The original version of this fork showed how to exchange limited telemetry and p
 * Simple code base designed to illustrate how the code works and encourage hacking (~400 lines of core code w/ comments)
 * Supports the use of Azure IoT Device Provisioning Service (DPS) for registering the device in IoT Central
 * IoT Central features supported
-  * Telemetry data - Temperature and Humidity
+  * Telemetry data - Temperature and Humidity now, more later
   * Properties - Device sends a die roll number every 15 seconds
   * Settings - Change the fan speed value and see it displayed in the serial moitor and acknowledged back to IoT Central
   * Commands - Send a message to the device and see it displayed as morse code on the device LED
@@ -23,7 +23,7 @@ The original version of this fork showed how to exchange limited telemetry and p
 Run:
 
 ```
-git clone https://github.com/firedog1024/mkr1000-iotc.git
+git clone https://github.com/ddavies0001/mkr1000-iotc.git
 ```
 
 ## Prerequisite
