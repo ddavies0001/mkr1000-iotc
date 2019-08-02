@@ -92,7 +92,7 @@ From left to right pins on the DHT11/22 sensor:
 
 We need to copy some values from our new IoT Central device into the configure.h file so it can connect to IoT Central.
 
-Click the device you created at the end of the Prerequisite step and click the "Connect" link to get the connection information for the device.  We are going to copy "Scope ID', Device ID", and "Primary Key" values into the respective positions in the configure.h file.
+Click the device you created at the end of the Prerequisite.  In the upper right corner of the device's window are three links: "Block", "Connect" and "Delete".  Click the "Connect" link to get the connection information for the device.  We are going to copy "Scope ID', Device ID", and "Primary Key" values into the respective positions in the configure.h file.
 
 ``` C
 // Azure IoT Central device information
