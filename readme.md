@@ -65,7 +65,7 @@ Save the file and you have made the necessary fix.  The size probably does not n
 
 To connect the device to Azure IoT Central you will need to provision an IoT Central application.  This is free for **seven days** but if you already have signed up for an Azure subscription and want to use pay as you go IoT Central is free as long as you have no more than **five devices** and do not exceed **1MB per month** of data.  
 
-Go to https://apps.azureiotcentral.com/ to create an application (you will need to sign in with a Microsoft account identity you may already have one if you use Xbox, office365, Windows 10, or other Microsoft services).  
+Go to https://apps.azureiotcentral.com/ to create an application (you will need to sign in with a Microsoft account identity you may already have one if you use Xbox, office365, Windows 10, or other Microsoft services).  Beware, confusion ahead!  If you go to https://apps.azureiotcentral.com/, you get a nice way to make EoT Central applicationss.  If you close all this and want to find your application sometime later, you might reasonably go to the Azure Portal and search for something like "Azure IoT Central"  It will say that there are no IoT Central applications.   
 
 * Choose Trial or Pay-As-You-Go.
 * Select the Sample DevKits template (middle box)
