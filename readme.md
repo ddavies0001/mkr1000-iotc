@@ -2,22 +2,13 @@
 
 ## About
 
-Arduino MKR1000 or MKR1010 code sample to send temperature and humidity data to Azure IoT Central.
-
-## Purchasing an Arduino MKR1000 or MKR1010
-
-If you dont have an Arduino MKR1000 or MKR1010 you can purchase one from Arrow 
-
-![Arrow logo](https://github.com/firedog1024/mkr1000-iotc/raw/master/assets/arrow-logo.png)
-
-* Arduino MKR1000 https://www.arrow.com/en/products/abx00011/arduino-corporation
-* Arduino MKR1010 https://www.arrow.com/en/products/abx00023/arduino-corporation
-
+The original version of this fork showed how to exchange limited telemetry and properties, settings, etc between Arduino MKR1000 or MKR1010 devices and Azure IoT Central.  This fork illustrates more device types and operations.
 
 ## Features
 
 * Works with both the Arduino MKR1000 or MKR1010 devices
-* Uses a DHT11 or DHT22 sensor for temperature and humidity (no sensor no-problem, temperature and humidity data can be simulated)
+* Illutrates use of other devices
+* Uses a DHT11 or DHT22 sensor for temperature and humidity.  More sensors covered in this document.
 * Uses simple MQTT library to communicate to Azure IoT Central
 * Simple code base designed to illustrate how the code works and encourage hacking (~400 lines of core code w/ comments)
 * Supports the use of Azure IoT Device Provisioning Service (DPS) for registering the device in IoT Central
