@@ -31,6 +31,8 @@ git clone https://github.com/ddavies0001/mkr1000-iotc.git
 
 Install the Arduino IDE (I tested with the current latest version 1.8.9) and the necessary drivers for the Arduino MKR1000 series of boards and ensure that a simple LED blink sketch compiles and runs on the board.  Follow the guide here https://www.arduino.cc/en/Guide/MKR1000
 
+If you have been exploring various ways to connect to the cloud from Arduino (AWS with no encryption, AWS with encryption, Google Cloud, Microsoft Azure IoT Hub, Microsoft Azure IoT Central, etc), you may find it useful to separate the Arduino libraries discussed in the next few paragraphs so that each cloud connection method has its own set of libraries.  You can do this by picking a directory for each set of libraries and use the Arduino IDE to specify which directory to use.  In my case, I installed the cloud-specific diretories just below %HOMEPATH%/Documents/Arduino and above "libraries".  For example, %HOMEPATH%/Documents/Arduino/iotc/libraries would have the libraries for the Azure IoT Central libraries.  To specify which libraries are active, open the Arduino IDE, select File -> Preferences and put the directory path (e.g %HOMEPATH%/Documents/Arduino/iotc) into the "Sketchbook location".
+
 This code requires a couple of libraries to be installed for it to compile.  Depending on if you are using a MKR1000 or MKR1010 board the Wi-Fi libraries are different.  To install an Arduino library, open the Arduino IDE and click the "Sketch" menu and then "Include Library" -> "Manage Libraries".  In the dialog, filter by the library name below and install the latest version.  For more information on installing libraries with Arduino see https://www.arduino.cc/en/guide/libraries. 
 
 ### MKR1000:
