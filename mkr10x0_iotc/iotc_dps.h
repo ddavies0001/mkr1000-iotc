@@ -59,6 +59,7 @@ int _getOperationId(char* scopeId, char* deviceId, char* authHeader, char *opera
       "Content-Length: %d", regMessage.length());
     assert(size != 0); tmpBuffer[size] = 0;
     client.println(tmpBuffer);
+    Serial.println(tmpBuffer);
 
     client.println(authHeader);
     client.println("Connection: close");
@@ -68,16 +69,16 @@ int _getOperationId(char* scopeId, char* deviceId, char* authHeader, char *opera
     delay(2000); // give 2 secs to server to process
     memset(tmpBuffer, 0, TEMP_BUFFER_SIZE);
     int index = 0;
-    while (client.available() && index < TEMP_BUFFER_SIZE - 1) {
+    while (client.available() && index < TEMP_BUFFER_SIZE - 1)
+    {
       tmpBuffer[index++] = client.read();
     }
     tmpBuffer[index] = 0;
-    const char* operationIdString= "{\"operationId\":\"";
+    const char *operationIdString = "{\"operationId\":\"";
     index = indexOf(tmpBuffer, TEMP_BUFFER_SIZE, operationIdString, strlen(operationIdString), 0);
     if (index == -1) {
 error_exit:
       Serial.println("ERROR: Error from DPS endpoint");
-      Serial.println(tmpBuffer);
       return 1;
     } else {
       index += strlen(operationIdString);
@@ -85,8 +86,6 @@ error_exit:
       if (index2 == -1) goto error_exit;
       tmpBuffer[index2] = 0;
       strcpy(operationId, tmpBuffer + index);
-      // Serial.print("OperationId:");
-      // Serial.println(operationId);
       client.stop();
     }
   } else {
@@ -139,19 +138,35 @@ int _getHostName(char *scopeId, char*deviceId, char *authHeader, char*operationI
 }
 
 int getHubHostName(char *scopeId, char* deviceId, char* key, char *hostName) {
-  char authHeader[AUTH_BUFFER_SIZE] = {0};
-  size_t size = 0;
-  //Serial.println("- iotc.dps : getting auth...");
-  if (getDPSAuthString(scopeId, deviceId, key, (char*)authHeader, AUTH_BUFFER_SIZE, size)) {
-    Serial.println("ERROR: getDPSAuthString has failed");
-    return 1;
+  // Try getting the host name from the connection string
+  if (1) {
+    int startStr, endStr;
+    startStr = indexOf(iotc_connectionString, strlen(iotc_connectionString), "=", 1, 0) + 1;
+    endStr = indexOf(iotc_connectionString, strlen(iotc_connectionString), ";", 1, startStr);
+    memcpy(hostName, iotc_connectionString + startStr, endStr - startStr);
+    hostName[endStr - startStr] = 0;
+    Serial.print("hostName from connectionString: ");
+    Serial.println(hostName);
   }
-  //Serial.println("- iotc.dps : getting operation id...");
-  char operationId[AUTH_BUFFER_SIZE] = {0};
-  if (_getOperationId(scopeId, deviceId, authHeader, operationId) == 0) {
-    delay(4000);
-    //Serial.println("- iotc.dps : getting host name...");
-    while( _getHostName(scopeId, deviceId, authHeader, operationId, hostName) == 2) delay(5000);
-    return 0;
+  else {
+    char authHeader[AUTH_BUFFER_SIZE] = {0};
+    size_t size = 0;
+    Serial.println("- iotc.dps : getting auth...");
+    if (getDPSAuthString(scopeId, deviceId, key, (char*)authHeader, AUTH_BUFFER_SIZE, size)) {
+      Serial.println("ERROR: getDPSAuthString has failed");
+      return 1;
+    }
+
+    Serial.println("- iotc.dps : getting operation id...");
+    char operationId[AUTH_BUFFER_SIZE] = {0};
+    if (_getOperationId(scopeId, deviceId, authHeader, operationId) == 0) {
+      delay(4000);
+      Serial.println("- iotc.dps : getting host name...");
+      while( _getHostName(scopeId, deviceId, authHeader, operationId, hostName) == 2) delay(5000);
+      return 0;
+    } else {
+      Serial.println("Unable to get operation id, so also unable to get HostName");
+      return 1;
+    }
   }
 }

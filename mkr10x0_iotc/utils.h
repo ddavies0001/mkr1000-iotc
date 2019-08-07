@@ -1,10 +1,12 @@
 // convert a float to a string as Arduino lacks an ftoa function
 char *dtostrf(double value, int width, unsigned int precision, char *result)
 {
-    int decpt, sign, reqd, pad;
+    int decpt, reqd, pad;
     const char *s, *e;
+    char sign;
     char *p;
-    s = fcvt(value, precision, &decpt, &sign);
+    // s = fcvt(value, precision, &decpt, &sign);
+    s = dtostrf(value, precision, (unsigned int)&decpt, &sign);
     if (precision == 0 && decpt == 0) {
         s = (*s < '5') ? "0" : "1";
         reqd = 1;

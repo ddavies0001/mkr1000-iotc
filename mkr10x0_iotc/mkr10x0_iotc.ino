@@ -1,5 +1,5 @@
 /*
-// Read temperature and humidity data from an Arduino MKR1000 or MKR1010 device using a DHT11/DHT22 sensor.
+// Read temperature, humidity and other sensor data from an Arduino MKR1000 or MKR1010 device using a DHT11/DHT22 sensor.
 // The data is then sent to Azure IoT Central for visualizing via MQTT
 //
 // See the readme.md for details on connecting the sensor and setting up Azure IoT Central to recieve the data.
@@ -56,6 +56,21 @@ dht_type dhtType = dht11;
 #else
 dht_type dhtType = simulated;
 #endif
+// Looks like there are several versions of temp/humidty senser.  We have DHT11
+// DHT11
+#define DHT11_PIN A6
+SimpleDHT11 _dht11;
+byte _temperature = 0;
+byte _humidity = 0;
+
+// Sound Sensor
+#define SOUND_PIN A5
+
+// Moisture Sensor
+#define MOISTURE_PIN A4
+
+// Light Sensor
+#define LIGHT_PIN A3
 
 String iothubHost;
 String deviceId;
@@ -81,6 +96,9 @@ long lastSensorReadMillis = 0;
 
 float tempValue = 0.0;
 float humidityValue = 0.0;
+float soundValue = 0.0;
+float lightValue = 0.0;
+float moistureValue = 0.0;
 int dieNumberValue = 1;
 
 // MQTT publish topics
@@ -213,7 +231,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
             twinRequestId = -1;
             // output limited to 128 bytes so this output may be truncated
             Serial_printf((char*)F("Current state of device twin:\n\t%s"), payloadStr.c_str());
-            Serial.println();
+            Serial.println("End of callback payload");
         } else {
             if (result >= 200 && result < 300) {
                 Serial_printf((char*)F("--> IoT Hub acknowledges successful receipt of twin property: %d\n"), msgId);
@@ -232,10 +250,11 @@ void connectMQTT(String deviceId, String username, String password) {
 
     Serial.println(F("Starting IoT Hub connection"));
     int retry = 0;
-    while(retry < 10 && !mqtt_client->connected()) {     
-        if (mqtt_client->connect(deviceId.c_str(), username.c_str(), password.c_str())) {
-                Serial.println(F("===> mqtt connected"));
-                mqttConnected = true;
+    while(retry < 10 && !mqtt_client->connected()) {
+        if (mqtt_client->connect(deviceId.c_str(), username.c_str(), password.c_str()))
+        {
+            Serial.println(F("===> mqtt connected"));
+            mqttConnected = true;
         } else {
             Serial.print(F("---> mqtt failed, rc="));
             Serial.println(mqtt_client->state());
@@ -278,18 +297,34 @@ void readSensors() {
         Serial_printf("Read DHT sensor failed (Error:%d)", err); 
         tempValue = -999.99;
         humidityValue = -999.99;
+        lightValue = -999.99;
+        soundValue = -999.99;
+        moistureValue = -999.99;
+    }
+    else
+    {
+        // convert from Centigrade to Fahrenheit
+        tempValue = ((tempValue * 9.0) / 5.0) + 32;
+        // update light, sound and moisture values
+        soundValue = analogRead(SOUND_PIN) / 2;
+        moistureValue = (analogRead(MOISTURE_PIN) * 100.0) / 1024.0; // 0-1024, 1024 means completely dry.
+        lightValue = ((1024-analogRead(LIGHT_PIN)) * 100.0) / 1024.0;//0 is full bright, and 1024 is total dark.
     }
     #else
+    // There are no sensors, supply simulated values
     tempValue = random(0, 7500) / 100.0;
     humidityValue = random(0, 9999) / 100.0;
-    #endif
+    light = random(0, 9999);
+    soundValue = random(0, 9999);
+    moistureValue = random(0, 9999);
+#endif
 }
 
 void setup() {
     Serial.begin(115200);
 
     // uncomment this line to add a small delay to allow time for connecting serial moitor to get full debug output
-    // delay(5000); 
+    delay(5000); 
  
     Serial_printf((char*)F("Hello, starting up the %s device\n"), DEVICE_NAME);
 
@@ -306,6 +341,7 @@ void setup() {
         status = WiFi.begin(wifi_ssid, wifi_password);
         delay(1000);
     }
+    Serial.println("Connected to WiFi network");
 
     // get current UTC time
     getTime();
@@ -353,7 +389,7 @@ void setup() {
 
 // main processing loop
 void loop() {
-    // give the MQTT handler time to do it's thing
+    // give the MQTT handler time to do its thing
     mqtt_client->loop();
 
     // read the sensor values
@@ -365,14 +401,23 @@ void loop() {
     // send telemetry values every 5 seconds
     if (mqtt_client->connected() && millis() - lastTelemetryMillis > TELEMETRY_SEND_INTERVAL) {
         Serial.println(F("Sending telemetry ..."));
+        // First, turn on the LED just so we can see it blink every time we send
+        // sensor readings.
+        digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+
         String topic = (String)IOT_EVENT_TOPIC;
         topic.replace(F("{device_id}"), deviceId);
-        char buff[10];
-        String payload = F("{\"temp\": {temp}, \"humidity\": {humidity}}");
-        payload.replace(F("{temp}"), dtostrf(tempValue, 7, 2, buff));
-        payload.replace(F("{humidity}"), dtostrf(humidityValue, 7, 2, buff));
-        Serial_printf("\t%s\n", payload.c_str());
+
+        String payload = F("{\"temp\": {temp}, \"humidity\": {humidity}, \"light\": {light}, \"sound\": {sound}, \"moisture\": {moisture}}");
+        payload.replace(F("{temp}"), String(tempValue));
+        payload.replace(F("{humidity}"), String(humidityValue));
+        payload.replace(F("{light}"), String(lightValue));
+        payload.replace(F("{sound}"), String(soundValue));
+        payload.replace(F("{moisture}"), String(moistureValue));
+        Serial.print("\t");
+        Serial.println(payload.c_str());
         mqtt_client->publish(topic.c_str(), payload.c_str());
+        digitalWrite(LED_BUILTIN, LOW);   // turn the LED off to signal end of sensor data
 
         lastTelemetryMillis = millis();
     }
