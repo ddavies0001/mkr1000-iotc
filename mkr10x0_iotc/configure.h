@@ -1,8 +1,8 @@
 // Azure IoT Central device information
-static char PROGMEM iotc_scopeId[] = "0ne0006ECD0";
-static char PROGMEM iotc_deviceId[] = "gigabits-device-001";
-static char PROGMEM iotc_deviceKey[] = "OA/xtvsMYMNhzcRSl/HyLkQB1dSk5xqQT6DkPf3uwK0=";
-static char PROGMEM iotc_connectionString[] = " HostName=iotc-69400b47-8251-4eb6-abfa-305ad5647ae8.azure-devices.net;DeviceId=gigabits-device-001;SharedAccessKey=OA/xtvsMYMNhzcRSl/HyLkQB1dSk5xqQT6DkPf3uwK0=";
+static char PROGMEM iotc_scopeId[] = "0ne0006FE39";
+static char PROGMEM iotc_deviceId[] = "b8f7905c-56a6-4002-9aa6-5e95a0d27d78";
+static char PROGMEM iotc_deviceKey[] = "/Cia3uWro2wVBVlNkoN0G+lZyZjUrTV1ngaLGe5T6J0=";
+static char PROGMEM iotc_connectionString[] = " HostName=iotc-a8a4e3ac-6d77-42de-acd6-3c69a161df36.azure-devices.net;DeviceId=b8f7905c-56a6-4002-9aa6-5e95a0d27d78;SharedAccessKey=/Cia3uWro2wVBVlNkoN0G+lZyZjUrTV1ngaLGe5T6J0=";
 
 // Wi-Fi information
 static char PROGMEM wifi_ssid[] = "Bark Place";

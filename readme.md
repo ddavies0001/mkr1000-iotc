@@ -15,7 +15,7 @@ The original version of this fork showed how to exchange limited telemetry and p
 * IoT Central features supported
   * Telemetry data - Temperature and Humidity now, more later
   * Properties - Device sends a die roll number every 15 seconds
-  * Settings - Change the fan speed value and see it displayed in the serial moitor and acknowledged back to IoT Central
+  * Settings - Change the simulated fan speed value and see it displayed in the serial moitor and acknowledged back to IoT Central
   * Commands - Send a message to the device and see it displayed as morse code on the device LED
 
 ## Installation
@@ -61,11 +61,26 @@ to:
 #define MQTT_MAX_PACKET_SIZE 2048
 ```
 
-Save the file and you have made the necessary fix.  The size probably does not need to be this large but firedog1024 did not find the crossover point where the size causes a failure.  Fortunately the MKR1000/1010 has a pretty good amount of SRAM (32KB!) so we should be ok.
+Save the file and you have made the necessary fix.  The size probably does not
+need to be this large but firedog1024 (who wrote the original version of this
+document) did not find the crossover point where the size causes a failure.
+Fortunately the MKR1000/1010 has a pretty good amount of SRAM (32KB!) so we
+should be ok.
 
 To connect the device to Azure IoT Central you will need to provision an IoT Central application.  This is free for **seven days** but if you already have signed up for an Azure subscription and want to use pay as you go IoT Central is free as long as you have no more than **five devices** and do not exceed **1MB per month** of data.  The Free Trial subscription won't let you have more than one IoT Central application at a time.  That's what convinced me to convert to a pay-as-you-go subscription.
 
-Go to https://apps.azureiotcentral.com/ to create an application (you will need to sign in with a Microsoft account identity you may already have one if you use Xbox, office365, Windows 10, or other Microsoft services).  Beware, confusion ahead!  If you go to https://apps.azureiotcentral.com/, you get a nice way to make IoT Central applications.  Say you close your browser and go out for lunch.  Sometime later, you open the browser and want to find your application again. You might reasonably go to the Azure Portal and search for something like "Azure IoT Central applications."  That will take you to a page labelled "IoT Central Application"  Sadly, that page will say that there are no IoT Central applications.  I don't know a way around this other than sticking to https://apps.azureiotcentral.com/.
+Go to https://apps.azureiotcentral.com/ to create an application (you will need
+to sign in with a Microsoft account identity you may already have one if you use
+Xbox, office365, Windows 10, or other Microsoft services).  Beware, confusion
+ahead!  If you go to https://apps.azureiotcentral.com/, you get a nice way to
+make IoT Central applications.  Say you close your browser and go out for lunch.
+Sometime later, you open the browser and want to find your application again.
+You might reasonably go to the Azure Portal and search for something like "Azure
+IoT Central applications."  That will take you to a page labelled "IoT Central
+Application".  When ddavies tried this that page said there were no IoT Central
+applications.  I complained to Microsoft.  By the time an answer arrived, the
+problem was gone.  If you have this problem, stick with
+https://apps.azureiotcentral.com/
 
 * Choose Trial or Pay-As-You-Go.
 * Select the Sample DevKits template (middle box)
@@ -99,7 +114,11 @@ Click the device you created at the end of the Prerequisite.  In the upper right
 static char PROGMEM iotc_scopeId[] = "<replace with IoT Central scope-id>";
 static char PROGMEM iotc_deviceId[] = "<replace with IoT Central device id>";
 static char PROGMEM iotc_deviceKey[] = "<replace with IoT Central device key>";
+static char PROGMEM iotc_connectionString[] = "<replace with dps-keygen output>";
 ```
+The last item needs more explanation.  Follow the instructions on
+"https://docs.microsoft.com/en-us/azure/iot-central/howto-generate-connection-string".
+Copy the output of the dps-keygen to the iotc_connectionString in configure.h.  
 
 You will also need to provide the Wi-Fi SSID (Wi-Fi name) and password in the configure.h
 
@@ -191,7 +210,18 @@ The code is now running on the device and should be sending data to IoT Central.
 ---> mqtt failed, rc=-2
 ```
 
-To fix this we need to update the Wi-Fi firmware on the device to the latest version (19.6.1 for the MKR1000).  Follow the instructions here https://www.arduino.cc/en/Tutorial/FirmwareUpdater to update the firmware to the latest version (currently 19.6.1).  Then start this section from the beginning.
+To fix this we need to update the Wi-Fi firmware on the device to the latest
+version (19.6.1 for the MKR1000).  Follow the instructions in
+https://www.arduino.cc/en/Tutorial/FirmwareUpdater to update the MKR1000's
+firmware to the latest version (currently 19.6.1).  And, we're not quite done.
+We still need to install the correct certificates.  Using your text editor,
+extract the portion of the connectionString (created by dps-keygen above) that
+starts after "HostName=" and ends just before the first semicolon.  Press the
+"Add domain" button on the Firmware Updater window and copy the HostName
+characters that you just extracted into the "Add SSL certificate from website"
+window and press "Ok".   Press the "Upload Certificates to WiFi module" button.
+It should pop up a happy window saying that the certificates have been loaded.
+Close the Firmware Updater window and start this section from the beginning.
 
 ### Telemetry:
 If the device is working correctly you should see output like this in the serial monitor that indicates data is successfully being transmitted to Azure IoT Central:
